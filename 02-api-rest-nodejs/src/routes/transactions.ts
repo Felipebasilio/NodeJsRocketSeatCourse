@@ -4,7 +4,7 @@ import { knex } from '../database'
 import { randomUUID } from 'node:crypto'
 import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
 
-// Every Fastify plçugin got to be an async function
+// Every Fastify plugin got to be an async function
 export async function transactionsRoutes(app: FastifyInstance) {
   // This hook will be executed before every request (Global Hook)
   // app.addHook('preHandler', async (request, reply) => {
