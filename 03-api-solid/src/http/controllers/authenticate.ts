@@ -17,10 +17,20 @@ export async function authenticate(
   try {
     const authenticateUseCase = makeAuthenticateUseCase()
 
-    await authenticateUseCase.execute({
+    const { user } = await authenticateUseCase.execute({
       email,
       password,
     })
+
+    const token = await reply.jwtSign(
+      {},
+      // Here we cannot send password, since its not encrypted, it is encoded
+      {
+        sign: { sub: user.id },
+      },
+    )
+
+    return reply.status(200).send({ token })
   } catch (error) {
     if (error instanceof InvalidCredentialsError) {
       // Bad request error, indicating that the request was not valid
@@ -30,6 +40,4 @@ export async function authenticate(
 
     throw error
   }
-
-  return reply.status(200).send()
 }
