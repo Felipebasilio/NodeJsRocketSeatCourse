@@ -4,6 +4,7 @@ import { create } from './create'
 import { validate } from './validate'
 import { history } from './history'
 import { metrics } from './metrics'
+import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 
 export function checkInsRoutes(app: FastifyInstance) {
   // Applies JWT verification middleware to all routes in this group
@@ -16,7 +17,11 @@ export function checkInsRoutes(app: FastifyInstance) {
 
   // PATCH endpoint to validate a specific check-in
   // Used by gym admins to confirm check-in was legitimate
-  app.patch('/check-ins/:checkInId/validate', validate)
+  app.patch(
+    '/check-ins/:checkInId/validate',
+    { onRequest: [verifyUserRole('ADMIN')] },
+    validate,
+  )
 
   // GET endpoint to retrieve check-in history for authenticated user
   // Returns paginated list of user's past check-ins

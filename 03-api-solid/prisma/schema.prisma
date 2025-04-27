@@ -13,11 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Here we define the Role-Based Access Control (RBAC) roles for the application
+enum Role {
+  ADMIN
+  MEMBER
+}
+
 model User {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
   password_hash String
+  role          Role     @default(MEMBER)
   created_at    DateTime @default(now())
 
   checkIns CheckIn[] // In camelCase since its the name handled by javscript operations
